@@ -38,13 +38,11 @@ const AccountTypeScreen: React.FC = () => {
   ];
 
   const handleAccountTypeSelect = (type: string) => {
-    console.log(`Selected account type: ${type}`);
     router.push((`/auth/${type}`) as any);
   };
 
   const handleSignIn = () => {
-    console.log('Navigate to sign in');
-    // Handle sign in navigation
+    router.push("/auth/login");
   };
 
   return (

@@ -1,4 +1,5 @@
 export const AuthEndpoints = {
+    login : "/login",
     truck_register : "/add_truck",
     company_register : "/add_company",
 }

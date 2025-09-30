@@ -13,14 +13,14 @@ export const registerTruckSchema = z.object({
     .regex(/^[a-zA-Z ]+$/, "Driver name can only contain letters and spaces"),
   contact_number: z
     .string()
-    .regex(/^[0-9]{10}$/, "Contact number must be exactly 10 digits"),
+    .regex(/^[0-9]{10}$/, "Mobile number must be exactly 10 digits"),
   owner_name: z
     .string()
     .min(3, "Owner name must be at least 3 characters")
     .regex(/^[a-zA-Z ]+$/, "Owner name can only contain letters and spaces"),
   owner_contact: z
     .string()
-    .regex(/^[0-9]{10}$/, "Owner contact must be exactly 10 digits"),
+    .regex(/^[0-9]{10}$/, "Owner mobile number must be exactly 10 digits"),
   password: z
     .string()
     .min(6, "Password must be at least 6 characters")
@@ -30,15 +30,13 @@ export const registerTruckSchema = z.object({
 
 
 export const registerCompanySchema = z.object({
-
-
   company_name: z
     .string()
     .min(3, "Company name must be at least 3 characters")
     .regex(/^[a-zA-Z ]+$/, "Company name can only contain letters and spaces"),
   contact_number: z
     .string()
-    .regex(/^[0-9]{10}$/, "Contact number must be exactly 10 digits"),
+    .regex(/^[0-9]{10}$/, "Mobile number must be exactly 10 digits"),
   gst_number: z
     .string()
     .min(6, "GST number must be at least 6 characters")
@@ -47,6 +45,19 @@ export const registerCompanySchema = z.object({
     .string()
     .min(5, "Address must be at least 5 characters"),
 
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[0-9]/, "Password must contain at least one number"),
+});
+
+
+export const loginSchema = z.object({
+
+  contact_number: z
+    .string()
+    .regex(/^[0-9]{10}$/, "Mobile number must be exactly 10 digits"),
   password: z
     .string()
     .min(6, "Password must be at least 6 characters")

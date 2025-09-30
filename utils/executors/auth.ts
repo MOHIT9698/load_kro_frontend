@@ -1,4 +1,4 @@
-import { RegisterCompanyFormData, RegisterTruckFormData } from "@/constants/formData";
+import { LoginFormData, RegisterCompanyFormData, RegisterTruckFormData } from "@/constants/formData";
 import { CommonApi } from "../CommonApi";
 import { AuthEndpoints } from "../endpoints/auth";
 
@@ -10,6 +10,8 @@ export const createCompany = async (data: RegisterCompanyFormData) => {
     });
     return response;
 }
+
+
 export const createTruck = async (data: RegisterTruckFormData) => {
   try {
     const response = await CommonApi(AuthEndpoints.truck_register, {
@@ -22,3 +24,12 @@ export const createTruck = async (data: RegisterTruckFormData) => {
     throw err; // rethrow so UI can also show it
   }
 };
+
+
+export const loginUser = async (data: LoginFormData) => {
+    const response = await CommonApi(AuthEndpoints.login, {
+        method: "POST",
+        body: data,
+    });
+    return response;
+}
