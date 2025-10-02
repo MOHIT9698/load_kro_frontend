@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   StyleSheet,
   Text,
@@ -19,6 +20,8 @@ interface AccountTypeOption {
 
 const AccountTypeScreen: React.FC = () => {
   const router = useRouter();
+  const { t } = useTranslation();
+
   const accountTypes: AccountTypeOption[] = [
     {
       id: 'truck',
@@ -55,12 +58,13 @@ const AccountTypeScreen: React.FC = () => {
           <Ionicons name="car" size={32} color="white" />
         </View>
         <Text style={styles.headerTitle}>TruckConnect</Text>
-        <Text style={styles.headerSubtitle}>Connecting trucks & Companies</Text>
+        <Text style={styles.headerSubtitle}>Connecting trucks & Companies </Text>
+
       </View>
 
       {/* Content */}
       <View style={styles.content}>
-        <Text style={styles.title}>Choose Your Account Type</Text>
+        <Text style={styles.title}>{t("Choose Your Account Type")}</Text>
 
         {/* Account Type Options */}
         <View style={styles.optionsContainer}>

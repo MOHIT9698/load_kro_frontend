@@ -7,11 +7,11 @@ export const registerTruckSchema = z.object({
       /^[A-Z]{2}[0-9]{1,2}[A-Z]{1,3}[0-9]{4}$/,
       "Enter valid truck number (e.g., MH12AB1234)"
     ),
-  name: z
+  driver_name: z
     .string()
     .min(3, "Driver name must be at least 3 characters")
     .regex(/^[a-zA-Z ]+$/, "Driver name can only contain letters and spaces"),
-  contact_number: z
+  driver_contact: z
     .string()
     .regex(/^[0-9]{10}$/, "Mobile number must be exactly 10 digits"),
   owner_name: z
@@ -34,7 +34,7 @@ export const registerCompanySchema = z.object({
     .string()
     .min(3, "Company name must be at least 3 characters")
     .regex(/^[a-zA-Z ]+$/, "Company name can only contain letters and spaces"),
-  contact_number: z
+  company_contact: z
     .string()
     .regex(/^[0-9]{10}$/, "Mobile number must be exactly 10 digits"),
   gst_number: z

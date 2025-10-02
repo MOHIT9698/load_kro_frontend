@@ -1,15 +1,20 @@
 import RegisterPasswordInput from '@/components/common-components/form/register/RegisterPasswordInput';
 import RegisterTextInput from '@/components/common-components/form/register/RegisterTextInput';
+import OtpVerification from '@/components/pages/Register/OtpVerification';
 import PrimaryButton from '@/components/ui/buttons/PrimaryButton';
 import { LoginFormData } from '@/constants/formData';
 import { loginSchema } from '@/constants/schema';
-import { loginUser } from '@/utils/executors/auth';
+import { loginUser, resendOtpVerification, VerifyRegistration } from '@/utils/executors/auth';
 import { Ionicons } from '@expo/vector-icons';
 import { zodResolver } from '@hookform/resolvers/zod';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
+    Animated,
+    Easing,
+    Keyboard,
     KeyboardAvoidingView,
     Platform,
     ScrollView,
@@ -26,6 +31,12 @@ export default function SignInScreen() {
     const router = useRouter();
     const [rememberMe, setRememberMe] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [showOtpModal, setShowOtpModal] = useState(false);
+    const [otpLoading, setOtpLoading] = useState(false);
+    const [truckId, setTruckId] = useState<string | null>(null);
+    const [companyId, setCompanyId] = useState<string | null>(null);
+
+
     const {
         control,
         handleSubmit,
@@ -38,28 +49,74 @@ export default function SignInScreen() {
         },
     });
 
+    // Animated header height
+    const headerHeight = useRef(new Animated.Value(300)).current;
+
+    useEffect(() => {
+        const showSub = Keyboard.addListener('keyboardDidShow', () => {
+            Animated.timing(headerHeight, {
+                toValue: 50,
+                duration: 300,
+                useNativeDriver: false,
+                easing: Easing.ease,
+            }).start();
+        });
+
+        const hideSub = Keyboard.addListener('keyboardDidHide', () => {
+            Animated.timing(headerHeight, {
+                toValue: 300,
+                duration: 300,
+                useNativeDriver: false,
+                easing: Easing.ease,
+            }).start();
+        });
+
+        return () => {
+            showSub.remove();
+            hideSub.remove();
+        };
+    }, []);
+
     const onSubmit = async (data: LoginFormData) => {
         setLoading(true);
         try {
-
             const response = await loginUser(data);
+            if (response?.status) {                
+                if (response?.verified === true) {
+                    Toast.show({
+                        type: "success",
+                        text1: "Login Successful",
 
-            if (response?.status) {
-                router.push("/")
-                Toast.show({
-                    type: "success",
-                    text1: "Company Registered",
-                    text2: "Your company has been registered successfully",
+                    });
 
-                });
-                router.push("/auth")
+                    if (Platform.OS === 'web') {
+                        localStorage.setItem("auth_token", response.token)
+                    } else {
+                        await AsyncStorage.setItem('auth_token', response.token);
+                    }
+                    router.push("/");
+                } else {
+
+                    setShowOtpModal(true);
+                    if (response?.truck_id) {
+                        setTruckId(response.truck_id);
+                    } else {
+                        setCompanyId(response?.company_id);
+                    }
+                    if (Platform.OS === 'web') {
+                        localStorage.setItem("reg_token", response.token)
+                    } else {
+                        await AsyncStorage.setItem('reg_token', response.token);
+                    }
+
+                }
+
             }
         } catch (err: any) {
             Toast.show({
                 type: "error",
                 text1: "Failed",
-                text2: err.error.error ?? "Something went wrong!",
-
+                text2: err.message ?? "Something went wrong!",
             });
         }
         setLoading(false);
@@ -70,39 +127,110 @@ export default function SignInScreen() {
     };
 
     const handleSignUp = () => {
-        router.push("/auth");
-    };
-    const handleGoBack = () => {
-        router.back();
+        router.replace("/auth");
     };
 
+    const verifyOtp = async (otp: string) => {
+        setOtpLoading(true);
+        const data = {
+            otp: otp,
+            ...(truckId ? { truck_id: truckId } : { company_id: companyId })
+        };
+        try {
 
+            const response = await VerifyRegistration(data);
+
+            if (response?.status) {
+                Toast.show({
+                    type: "success",
+                    text1: response?.message ?? "Otp Verified",
+                    text2: "Your truck has been registered successfully",
+
+                });
+                setShowOtpModal(false);
+                router.push("/")
+
+            }
+        } catch (err: any) {
+            Toast.show({
+                type: "error",
+                text1: "Failed",
+                text2: err?.message ?? "Something went wrong!",
+
+            });
+        }
+        setOtpLoading(false);
+    }
+
+
+    const resendOtp = async() => { 
+        const data = {
+            ...(truckId ? { truck_id: truckId } : { company_id: companyId })
+        };
+        try {
+
+            const response = await resendOtpVerification(data);
+
+            if (response?.status) {
+                Toast.show({
+                    type: "success",
+                    text1: response?.message ??  "Otp resend successfully ",
+
+                });
+
+            }
+        } catch (err: any) {
+            Toast.show({
+                type: "error",
+                text1: "Failed",
+                text2: err?.message ?? "Something went wrong!",
+
+            });
+        }
+    }
     return (
-        <SafeAreaView style={styles.container} edges={["left", "right", "bottom"]} >
+        <SafeAreaView style={styles.container} edges={["left", "right", "bottom"]}>
             <StatusBar barStyle="light-content" backgroundColor="#ef4444" />
-            <View style={styles.header}>
+
+            {/* ✅ Animated Header */}
+            <Animated.View style={[styles.header, { height: headerHeight }]}>
                 <View style={styles.iconContainer}>
                     <Ionicons name="car" size={32} color="white" />
                 </View>
                 <Text style={styles.headerTitle}>TruckConnect</Text>
                 <Text style={styles.headerSubtitle}>Connecting trucks & Companies</Text>
-            </View>
-            <View style={styles.content}>
-                <Text style={styles.title}>Let’s Get Started</Text>
-                <KeyboardAvoidingView
-                    style={{ flex: 1 }}
-                    behavior={Platform.OS === "ios" ? "padding" : "height"}
-                    keyboardVerticalOffset={60} // adjust based on your header height
-                >
-                    <ScrollView
-                        // style={styles.content}
-                        showsVerticalScrollIndicator={false}
-                        keyboardShouldPersistTaps="handled"
-                    >
-                        <View style={styles.formContainer}>
-                            <RegisterTextInput control={control} error={errors.contact_number} keyboardType="phone-pad" autoComplete="tel" iconName="call-outline" label="Mobile Number" name="contact_number" placeholder="Enter mobile number" />
-                            <RegisterPasswordInput control={control} name="password" label="Password" placeholder="Enter password" error={errors.password} />
+            </Animated.View>
 
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 60}
+            >
+                <ScrollView
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
+                >
+                    <View style={styles.content}>
+                        <Text style={styles.title}>Let’s Get Started</Text>
+                        <View style={styles.formContainer}>
+                            <RegisterTextInput
+                                control={control}
+                                error={errors.contact_number}
+                                keyboardType="phone-pad"
+                                autoComplete="tel"
+                                iconName="call-outline"
+                                label="Mobile Number"
+                                name="contact_number"
+                                placeholder="Enter mobile number"
+                            />
+                            <RegisterPasswordInput
+                                control={control}
+                                name="password"
+                                label="Password"
+                                placeholder="Enter password"
+                                error={errors.password}
+                            />
 
                             <View style={styles.optionsRow}>
                                 <TouchableOpacity
@@ -129,13 +257,17 @@ export default function SignInScreen() {
                                 </TouchableOpacity>
                             </View>
                         </View>
-                    </ScrollView>
-                </KeyboardAvoidingView>
-            </View>
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
+
+            <OtpVerification getOtp={verifyOtp} loading={otpLoading} resendOtp={resendOtp} setShowOtpModal={setShowOtpModal} showOtpModal={showOtpModal} />
+
         </SafeAreaView>
     );
 }
 
+// ✅ Updated styles
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -169,53 +301,25 @@ const styles = StyleSheet.create({
         color: 'rgba(255, 255, 255, 0.9)',
     },
     content: {
-        flex: 1,
         paddingHorizontal: 20,
-        paddingTop: 30,
+        paddingTop: 20,
     },
     title: {
         fontSize: 24,
         fontWeight: '600',
         color: '#1f2937',
         textAlign: 'center',
+        marginBottom: 20,
     },
     formContainer: {
-        flex: 1,
-        paddingHorizontal: 24,
-        paddingTop: 32,
-    },
-    inputGroup: {
-        marginBottom: 24,
-    },
-    label: {
-        fontSize: 14,
-        color: '#424242',
-        marginBottom: 8,
-        fontWeight: '500',
-    },
-    inputWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#E0E0E0',
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        backgroundColor: '#FAFAFA',
-    },
-    inputIcon: {
-        marginRight: 8,
-    },
-    input: {
-        flex: 1,
-        paddingVertical: 14,
-        fontSize: 15,
-        color: '#212121',
+        paddingHorizontal: 4,
+        paddingBottom: 40,
     },
     optionsRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 32,
+        marginBottom: 24,
     },
     rememberMeContainer: {
         flexDirection: 'row',
@@ -244,22 +348,11 @@ const styles = StyleSheet.create({
         color: '#E53935',
         fontWeight: '500',
     },
-    signInButton: {
-        backgroundColor: '#E53935',
-        paddingVertical: 16,
-        borderRadius: 8,
-        alignItems: 'center',
-        marginBottom: 24,
-    },
-    signInButtonText: {
-        color: '#FFFFFF',
-        fontSize: 16,
-        fontWeight: '600',
-    },
     signUpContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: 16,
     },
     signUpText: {
         fontSize: 14,

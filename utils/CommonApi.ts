@@ -1,5 +1,8 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Platform } from "react-native";
+
 // utils/api.ts
-const BASE_URL = "http://localhost:3000/api/v1";
+const BASE_URL = "https://oldest-soraya-fleecier.ngrok-free.dev/api/v1";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -14,12 +17,14 @@ export const CommonApi = async (
   endpoint: string,
   { method = "GET", body, headers = {}, token }: ApiOptions = {}
 ) => {
+
+  const storageToken = Platform.OS === 'web' ? localStorage.getItem("auth_token") : await AsyncStorage.getItem('auth_token');
   try {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
       method,
       headers: {
         "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(token ? { Authorization: `Bearer ${token ?? storageToken}` } : {}),
         ...headers,
       },
       body: body ? JSON.stringify(body) : undefined,
