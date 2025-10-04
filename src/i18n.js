@@ -5,16 +5,16 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 // Import translations
-// import bn from './locales/bn.json';
 import { Platform } from 'react-native';
 import en from './locales/en.json';
-// import gu from './locales/gu.json';
-// import hi from './locales/hi.json';
-// import kn from './locales/kn.json';
-// import mr from './locales/mr.json';
-// import pa from './locales/pa.json';
-// import ta from './locales/ta.json';
-// import te from './locales/te.json';
+import hi from './locales/hi.json';
+import pa from './locales/pa.json';
+import ta from './locales/ta.json';
+import te from './locales/te.json';
+import kn from './locales/kn.json';
+import mr from './locales/mr.json';
+import gu from './locales/gu.json';
+import bn from './locales/bn.json';
 
 
 const LANGUAGE_PREFERENCE = 'APP_LANGUAGE';
@@ -58,14 +58,14 @@ i18n
     fallbackLng: 'en',
     resources: {
       en: { translation: en },
-      // hi: { translation: hi },
-      // pa: { translation: pa },
-      // ta: { translation: ta },
-      // te: { translation: te },
-      // kn: { translation: kn },
-      // mr: { translation: mr },
-      // gu: { translation: gu },
-      // bn: { translation: bn },
+      hi: { translation: hi },
+      pa: { translation: pa },
+      ta: { translation: ta },
+      te: { translation: te },
+      kn: { translation: kn },
+      mr: { translation: mr },
+      gu: { translation: gu },
+      bn: { translation: bn },
     },
     react: {
       useSuspense: false,

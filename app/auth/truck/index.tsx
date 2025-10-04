@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 // import { Picker } from '@react-native-picker/picker';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Alert,
   KeyboardAvoidingView,
@@ -20,24 +21,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const CreateTruckAccountScreen: React.FC = () => {
   const router = useRouter();
-
-  const handleCreateAccount = async () => {
-
-    Alert.alert(
-      'Success',
-      'Account created successfully!',
-      [
-        {
-          text: 'OK',
-          onPress: () => {
-            // Navigate to login or dashboard
-            console.log('Navigate to next screen');
-          },
-        },
-      ]
-    );
-
-  };
+  const { t } = useTranslation();
 
   const handleGoBack = () => {
     // Navigate back to previous screen
@@ -57,7 +41,7 @@ const CreateTruckAccountScreen: React.FC = () => {
         >
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Create Truck</Text>
+        <Text style={styles.headerTitle}>{t("Create Truck")}</Text>
       </View>
 
       {/* Form */}

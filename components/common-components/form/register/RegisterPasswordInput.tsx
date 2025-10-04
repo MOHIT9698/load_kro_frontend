@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { Controller, FieldError } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 interface PasswordInputProps {
@@ -18,6 +19,7 @@ const RegisterPasswordInput = ({
     placeholder,
     error,
 }: PasswordInputProps) => {
+    const { t } = useTranslation();
     const [showPassword, setShowPassword] = useState(false);
 
     return (
@@ -55,7 +57,7 @@ const RegisterPasswordInput = ({
                             />
                         </TouchableOpacity>
                     </View>
-                    {error && <Text style={styles.errorText}>{error.message}</Text>}
+                    {error && <Text style={styles.errorText}>{t(error.message)}</Text>}
                 </View>
             )}
         />

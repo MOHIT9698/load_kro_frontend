@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -25,15 +26,15 @@ const AccountTypeScreen: React.FC = () => {
   const accountTypes: AccountTypeOption[] = [
     {
       id: 'truck',
-      title: 'Truck',
-      description: 'Manage trucks, routes & find loads',
+      title: t('Truck'),
+      description: t('Manage trucks, routes & find loads'),
       icon: 'car-outline',
       color: '#ef4444',
     },
     {
       id: 'company',
-      title: 'Company',
-      description: 'Post loads & connect with trucks',
+      title: t('Company'),
+      description: t('Post loads & connect with trucks'),
       icon: 'business-outline',
       color: '#ef4444',
 
@@ -54,11 +55,16 @@ const AccountTypeScreen: React.FC = () => {
 
       {/* Header */}
       <View style={styles.header}>
-        <View style={styles.iconContainer}>
+        {/* <View style={styles.iconContainer}>
           <Ionicons name="car" size={32} color="white" />
-        </View>
-        <Text style={styles.headerTitle}>TruckConnect</Text>
-        <Text style={styles.headerSubtitle}>Connecting trucks & Companies </Text>
+        </View> */}
+        <Image
+          source={require("../../assets/images/truckLogo.png")}
+
+          style={{ width: 140, height: 90 }}
+        />
+        <Text style={styles.headerTitle}>TRUCKSY</Text>
+        <Text style={styles.headerSubtitle}>{t("Connecting Trucks with Companies")} </Text>
 
       </View>
 
@@ -91,9 +97,9 @@ const AccountTypeScreen: React.FC = () => {
 
         {/* Sign In Section */}
         <View style={styles.signInSection}>
-          <Text style={styles.signInText}>Already have an account?</Text>
+          <Text style={styles.signInText}>{t("Already have an account?")}</Text>
           <TouchableOpacity onPress={handleSignIn} activeOpacity={0.7}>
-            <Text style={styles.signInLink}>Sign In</Text>
+            <Text style={styles.signInLink}>{t("Sign In")}</Text>
           </TouchableOpacity>
         </View>
       </View>

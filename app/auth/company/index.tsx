@@ -2,6 +2,7 @@ import RegisterCompanyForm from '@/components/pages/Register/RegisterCompanyForm
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     KeyboardAvoidingView,
     Platform,
@@ -18,6 +19,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const CreateCompanyAccountScreen: React.FC = () => {
     const router = useRouter();
+    const {t} = useTranslation();
 
     const handleGoBack = () => {
         router.back();
@@ -36,7 +38,7 @@ const CreateCompanyAccountScreen: React.FC = () => {
                 >
                     <Ionicons name="arrow-back" size={24} color="white" />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Create Company Account</Text>
+                <Text style={styles.headerTitle}>{t("Create Company Account")}</Text>
             </View>
 
             <KeyboardAvoidingView

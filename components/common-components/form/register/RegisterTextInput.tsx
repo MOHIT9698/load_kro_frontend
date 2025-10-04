@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Control, Controller } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
 interface InputProps {
@@ -27,6 +28,8 @@ const RegisterTextInput = ({
   autoComplete,
   secureTextEntry=false,
 }: InputProps) => {
+
+  const {t} = useTranslation();
   return (
     <Controller
       control={control}
@@ -54,7 +57,7 @@ const RegisterTextInput = ({
               secureTextEntry={secureTextEntry}
             />
           </View>
-          {error && <Text style={styles.errorText}>{error.message}</Text>}
+          {error && <Text style={styles.errorText}>{t(error.message)}</Text>}
         </View>
       )}
     />

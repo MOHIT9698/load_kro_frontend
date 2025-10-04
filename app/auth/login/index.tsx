@@ -11,9 +11,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
     Animated,
     Easing,
+    Image,
     Keyboard,
     KeyboardAvoidingView,
     Platform,
@@ -29,6 +31,7 @@ import Toast from 'react-native-toast-message';
 
 export default function SignInScreen() {
     const router = useRouter();
+    const {t} = useTranslation();
     const [rememberMe, setRememberMe] = useState(false);
     const [loading, setLoading] = useState(false);
     const [showOtpModal, setShowOtpModal] = useState(false);
@@ -50,12 +53,12 @@ export default function SignInScreen() {
     });
 
     // Animated header height
-    const headerHeight = useRef(new Animated.Value(300)).current;
+    const headerHeight = useRef(new Animated.Value(315)).current;
 
     useEffect(() => {
         const showSub = Keyboard.addListener('keyboardDidShow', () => {
             Animated.timing(headerHeight, {
-                toValue: 50,
+                toValue: 210,
                 duration: 300,
                 useNativeDriver: false,
                 easing: Easing.ease,
@@ -64,7 +67,7 @@ export default function SignInScreen() {
 
         const hideSub = Keyboard.addListener('keyboardDidHide', () => {
             Animated.timing(headerHeight, {
-                toValue: 300,
+                toValue: 315,
                 duration: 300,
                 useNativeDriver: false,
                 easing: Easing.ease,
@@ -84,8 +87,8 @@ export default function SignInScreen() {
             if (response?.status) {                
                 if (response?.verified === true) {
                     Toast.show({
-                        type: "success",
-                        text1: "Login Successful",
+                        type: t("success"),
+                        text1: t("Login Successful"),
 
                     });
 
@@ -114,9 +117,9 @@ export default function SignInScreen() {
             }
         } catch (err: any) {
             Toast.show({
-                type: "error",
-                text1: "Failed",
-                text2: err.message ?? "Something went wrong!",
+                type: t("error"),
+                text1: t("Failed"),
+                text2: err.message ?? t("Something went wrong!"),
             });
         }
         setLoading(false);
@@ -142,9 +145,9 @@ export default function SignInScreen() {
 
             if (response?.status) {
                 Toast.show({
-                    type: "success",
-                    text1: response?.message ?? "Otp Verified",
-                    text2: "Your truck has been registered successfully",
+                    type: t("success"),
+                    text1: response?.message ?? t("Otp Verified"),
+                    text2: t("Registered successfully"),
 
                 });
                 setShowOtpModal(false);
@@ -153,9 +156,9 @@ export default function SignInScreen() {
             }
         } catch (err: any) {
             Toast.show({
-                type: "error",
-                text1: "Failed",
-                text2: err?.message ?? "Something went wrong!",
+                type: t("error"),
+                text1: t("Failed"),
+                text2: err?.message ?? t("Something went wrong!"),
 
             });
         }
@@ -173,17 +176,17 @@ export default function SignInScreen() {
 
             if (response?.status) {
                 Toast.show({
-                    type: "success",
-                    text1: response?.message ??  "Otp resend successfully ",
+                    type: t("success"),
+                    text1: response?.message ??  t("Otp resend successfull "),
 
                 });
 
             }
         } catch (err: any) {
             Toast.show({
-                type: "error",
-                text1: "Failed",
-                text2: err?.message ?? "Something went wrong!",
+                type: t("error"),
+                text1: t("Failed"),
+                text2: err?.message ?? t("Something went wrong!"),
 
             });
         }
@@ -194,11 +197,13 @@ export default function SignInScreen() {
 
             {/* ✅ Animated Header */}
             <Animated.View style={[styles.header, { height: headerHeight }]}>
-                <View style={styles.iconContainer}>
-                    <Ionicons name="car" size={32} color="white" />
-                </View>
-                <Text style={styles.headerTitle}>TruckConnect</Text>
-                <Text style={styles.headerSubtitle}>Connecting trucks & Companies</Text>
+                <Image
+                          source={require("../../../assets/images/truckLogo.png")}
+                
+                          style={{ width: 140, height: 90 }}
+                        />
+                <Text style={styles.headerTitle}>LOAD KRO</Text>
+                <Text style={styles.headerSubtitle}>{t("Connecting Trucks with Companies")}</Text>
             </Animated.View>
 
             <KeyboardAvoidingView
@@ -212,7 +217,7 @@ export default function SignInScreen() {
                     showsVerticalScrollIndicator={false}
                 >
                     <View style={styles.content}>
-                        <Text style={styles.title}>Let’s Get Started</Text>
+                        <Text style={styles.title}>{t("Let’s Get Started")}</Text>
                         <View style={styles.formContainer}>
                             <RegisterTextInput
                                 control={control}
@@ -220,15 +225,15 @@ export default function SignInScreen() {
                                 keyboardType="phone-pad"
                                 autoComplete="tel"
                                 iconName="call-outline"
-                                label="Mobile Number"
+                                label={t("Mobile Number")}
                                 name="contact_number"
-                                placeholder="Enter mobile number"
+                                placeholder={t("Enter mobile number")}
                             />
                             <RegisterPasswordInput
                                 control={control}
                                 name="password"
-                                label="Password"
-                                placeholder="Enter password"
+                                label={t("Password")}
+                                placeholder={t("Enter password")}
                                 error={errors.password}
                             />
 
@@ -240,20 +245,20 @@ export default function SignInScreen() {
                                     <View style={[styles.checkbox, rememberMe && styles.checkboxChecked]}>
                                         {rememberMe && <Ionicons name="checkmark" size={16} color="#FFFFFF" />}
                                     </View>
-                                    <Text style={styles.rememberMeText}>Remember me</Text>
+                                    <Text style={styles.rememberMeText}>{t("Remember me")}</Text>
                                 </TouchableOpacity>
 
                                 <TouchableOpacity onPress={handleForgotPassword}>
-                                    <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+                                    <Text style={styles.forgotPasswordText}>{t("Forgot Password?")}</Text>
                                 </TouchableOpacity>
                             </View>
 
-                            <PrimaryButton text="Sign In" isLoading={loading} onPress={handleSubmit(onSubmit)} />
+                            <PrimaryButton text={t("Sign In")} isLoading={loading} onPress={handleSubmit(onSubmit)} />
 
                             <View style={styles.signUpContainer}>
-                                <Text style={styles.signUpText}>Don't have an account?</Text>
+                                <Text style={styles.signUpText}>{t("Don't have an account?")}</Text>
                                 <TouchableOpacity onPress={handleSignUp}>
-                                    <Text style={styles.signUpLink}>Sign Up</Text>
+                                    <Text style={styles.signUpLink}>{t("Sign Up")}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -295,6 +300,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'white',
         marginBottom: 8,
+        fontFamily: "Inter_700Bold",
     },
     headerSubtitle: {
         fontSize: 16,

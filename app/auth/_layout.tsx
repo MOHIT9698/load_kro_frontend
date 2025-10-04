@@ -20,7 +20,9 @@ const languages = [
     { label: 'ಕನ್ನಡ', code: 'kn' },
     { label: 'मराठी', code: 'mr' },
     { label: 'বাংলা', code: 'bn' },
+    { label: 'ગુજરાતી', code: 'gu' }
 ];
+
 
 export default function RootLayout() {
     const colorScheme = useColorScheme();
@@ -98,7 +100,7 @@ const styles = StyleSheet.create({
         padding: 20,
         borderTopLeftRadius: 12,
         borderTopRightRadius: 12,
-        maxHeight: '50%',
+        maxHeight: '80%',
     },
     modalTitle: {
         fontSize: 18,

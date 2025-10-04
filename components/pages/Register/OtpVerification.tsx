@@ -1,6 +1,7 @@
 import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
 import TextButton from "@/components/ui/buttons/TextButton";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Modal, StyleSheet, Text, View } from "react-native";
 import OTPTextInput from 'react-native-otp-textinput';
 
@@ -15,6 +16,7 @@ interface OtpVerificationProps {
 
 
 const OtpVerification = ({ showOtpModal, setShowOtpModal, getOtp, resendOtp, loading }: OtpVerificationProps) => {
+    const {t} = useTranslation();
     const [otp, setOtp] = useState("");
 
 
@@ -32,7 +34,7 @@ const OtpVerification = ({ showOtpModal, setShowOtpModal, getOtp, resendOtp, loa
         >
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContent}>
-                    <Text style={styles.modalTitle}>Enter OTP</Text>
+                    <Text style={styles.modalTitle}>{t("Enter OTP")}</Text>
 
                     <OTPTextInput
                         inputCount={6}
@@ -50,8 +52,8 @@ const OtpVerification = ({ showOtpModal, setShowOtpModal, getOtp, resendOtp, loa
                     />
 
 
-                    <PrimaryButton text="Submit" isLoading={loading} onPress={submitOtp} />
-                    <TextButton text="Resend OTP" isLoading={false} onPress={resendOtp} />
+                    <PrimaryButton text={t("Submit")} isLoading={loading} onPress={submitOtp} />
+                    <TextButton text={t("Resend OTP")} isLoading={false} onPress={resendOtp} />
                 </View>
             </View>
         </Modal>

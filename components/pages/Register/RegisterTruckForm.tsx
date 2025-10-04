@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { Platform, View } from "react-native";
 import Toast from "react-native-toast-message";
 import OtpVerification from "./OtpVerification";
+import { useTranslation } from "react-i18next";
 
 
 
@@ -32,6 +33,7 @@ const RegisterTruckForm = () => {
     },
   });
   const router = useRouter();
+  const {t} = useTranslation();
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [otpLoading, setOtpLoading] = useState(false);
@@ -47,9 +49,9 @@ const RegisterTruckForm = () => {
         const token = response.token;
 
         Toast.show({
-          type: "success",
-          text1: response?.message ?? "Truck Registered",
-          text2: "Your truck has been registered successfully",
+          type: t("success"),
+          text1: response?.message ?? t("Truck Registered"),
+          text2: t("Your truck has been registered successfully"),
 
         });
         if (token) {
@@ -69,9 +71,9 @@ const RegisterTruckForm = () => {
     } catch (err: any) {
       
       Toast.show({
-        type: "error",
-        text1: "Failed",
-        text2: err.message ?? "Something went wrong!",
+        type: t("error"),
+        text1: t("Failed"),
+        text2: err.message ?? t("Something went wrong!"),
 
       });
     }
@@ -90,17 +92,17 @@ const RegisterTruckForm = () => {
              if (response?.status) {
  
                  Toast.show({
-                     type: "success",
-                     text1: response?.message ?? "Otp resend successfully ",
+                     type: t("success"),
+                     text1: response?.message ?? t("Otp resend successfully"),
  
                  });
  
              }
          } catch (err: any) {
              Toast.show({
-                 type: "error",
-                 text1: "Failed",
-                 text2: err?.message ?? "Something went wrong!",
+                 type: t("error"),
+                 text1: t("Failed"),
+                 text2: err?.message ?? t("Something went wrong!"),
  
              });
          }
@@ -120,9 +122,9 @@ const RegisterTruckForm = () => {
 
       if (response?.status) {
         Toast.show({
-          type: "success",
-          text1: response?.message ?? "Otp Verified",
-          text2: "Your truck has been registered successfully",
+          type: t("success"),
+          text1: response?.message ?? t("Otp Verified"),
+          text2: t("Your truck has been registered successfully"),
 
         });
         setShowOtpModal(false);
@@ -131,9 +133,9 @@ const RegisterTruckForm = () => {
       }
     } catch (err: any) {
       Toast.show({
-        type: "error",
-        text1: "Failed",
-        text2: err?.message ?? "Something went wrong!",
+        type: t("error"),
+        text1: t("Failed"),
+        text2: err?.message ?? t("Something went wrong!"),
 
       });
     }
@@ -144,13 +146,13 @@ const RegisterTruckForm = () => {
   return (
     <>
       <View>
-        <RegisterTextInput control={control} error={errors.truck_number} autoCapitalize="words" autoComplete="name" iconName="car-outline" label="Truck Number" name="truck_number" placeholder="Enter truck number" />
-        <RegisterTextInput control={control} error={errors.driver_name} autoCapitalize="words" autoComplete="name" iconName="person-outline" label="Driver Name" name="driver_name" placeholder="Enter driver name" />
-        <RegisterTextInput control={control} error={errors.driver_contact} keyboardType="phone-pad" autoComplete="tel" iconName="call-outline" label="Driver Mobile Number" name="driver_contact" placeholder="Enter mobile number" />
-        <RegisterTextInput control={control} error={errors.owner_name} autoCapitalize="words" autoComplete="name" iconName="person-outline" label="Owner Name" name="owner_name" placeholder="Enter owner name" />
-        <RegisterTextInput control={control} error={errors.owner_contact} keyboardType="phone-pad" autoComplete="tel" iconName="call-outline" label="Owner Mobile Number" name="owner_contact" placeholder="Enter onwer mobile number" />
-        <RegisterPasswordInput control={control} name="password" label="Password" placeholder="Create password" error={errors.password} />
-        <PrimaryButton text="Create Truck" isLoading={loading} onPress={handleSubmit(onSubmit)} />
+        <RegisterTextInput control={control} error={errors.truck_number} autoCapitalize="words" autoComplete="name" iconName="car-outline" label={t("Truck Number")} name="truck_number" placeholder={t("Enter truck number")} />
+        <RegisterTextInput control={control} error={errors.driver_name} autoCapitalize="words" autoComplete="name" iconName="person-outline" label={t("Driver Name")} name="driver_name" placeholder={t("Enter driver name")} />
+        <RegisterTextInput control={control} error={errors.driver_contact} keyboardType="phone-pad" autoComplete="tel" iconName="call-outline" label={t("Driver Mobile Number")} name="driver_contact" placeholder={t("Enter mobile number")} />
+        <RegisterTextInput control={control} error={errors.owner_name} autoCapitalize="words" autoComplete="name" iconName="person-outline" label={t("Owner Name")} name="owner_name" placeholder={t("Enter owner name")} />
+        <RegisterTextInput control={control} error={errors.owner_contact} keyboardType="phone-pad" autoComplete="tel" iconName="call-outline" label={t("Owner Mobile Number")} name="owner_contact" placeholder={t("Enter onwer mobile number")} />
+        <RegisterPasswordInput control={control} name="password" label={t("Password")} placeholder={t("Create password")} error={errors.password} />
+        <PrimaryButton text={t("Create Truck")} isLoading={loading} onPress={handleSubmit(onSubmit)} />
       </View>
       <OtpVerification getOtp={verifyOtp} loading={otpLoading} resendOtp={resendOtp} setShowOtpModal={setShowOtpModal} showOtpModal={showOtpModal} />
 

@@ -28,7 +28,7 @@ export const createTruck = async (data: RegisterTruckFormData) => {
 };
 
 
-export const VerifyRegistration = async (data: VerificationFormData) => {
+export const VerifyRegistration = async (data: VerificationFormData|any) => {
 
   const token = Platform.OS === 'web' ? localStorage.getItem("reg_token") : await AsyncStorage.getItem('reg_token');
 
@@ -40,7 +40,7 @@ export const VerifyRegistration = async (data: VerificationFormData) => {
   return response;
 }
 
-export const resendOtpVerification = async (data: ResendOtpFormData) => {
+export const resendOtpVerification = async (data: ResendOtpFormData|any) => {
 
   const token = Platform.OS === 'web' ? localStorage.getItem("reg_token") : await AsyncStorage.getItem('reg_token');
 
