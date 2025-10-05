@@ -51,7 +51,7 @@ const RegisterCompanyForm = () => {
                 const token = response.token;
 
                 Toast.show({
-                    type: t("success"),
+                        type: "success",
                     text1: response?.message ?? t("Company Registered"),
                     text2: t("Your company has been registered successfully"),
 
@@ -72,7 +72,7 @@ const RegisterCompanyForm = () => {
             }
         } catch (err: any) {
             Toast.show({
-                type: t("error"),
+                 type: "error",
                 text1: t("Failed"),
                 text2: err?.message ?? t("Something went wrong!"),
 
@@ -91,7 +91,7 @@ const RegisterCompanyForm = () => {
 
             if (response?.status) {
                 Toast.show({
-                    type: t("success"),
+                        type: "success",
                     text1: response?.message ?? t("Otp resend successfully"),
 
                 });
@@ -99,7 +99,7 @@ const RegisterCompanyForm = () => {
             }
         } catch (err: any) {
             Toast.show({
-                type: t("error"),
+                 type: "error",
                 text1: t("Failed"),
                 text2: err?.message ?? t("Something went wrong!"),
 
@@ -120,7 +120,7 @@ const RegisterCompanyForm = () => {
 
             if (response?.status) {
                 Toast.show({
-                    type: t("success"),
+                        type: "success",
                     text1: response?.message ?? t("Otp Verified"),
                     text2: t("Your company has been registered successfully"),
 
@@ -131,7 +131,7 @@ const RegisterCompanyForm = () => {
             }
         } catch (err: any) {
             Toast.show({
-                type: t("error"),
+                 type: "error",
                 text1: t("Failed"),
                 text2: err?.message ?? t("Something went wrong!"),
 

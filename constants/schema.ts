@@ -67,4 +67,18 @@ export const loginSchema = z.object({
 
 
 
+export const createRouteSchema = z.object({
+
+  contact_number: z
+    .string()
+    .regex(/^[0-9]{10}$/, "Mobile number must be exactly 10 digits"),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[0-9]/, "Password must contain at least one number"),
+});
+
+
+
 

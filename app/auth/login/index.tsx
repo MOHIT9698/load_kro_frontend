@@ -31,7 +31,7 @@ import Toast from 'react-native-toast-message';
 
 export default function SignInScreen() {
     const router = useRouter();
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [rememberMe, setRememberMe] = useState(false);
     const [loading, setLoading] = useState(false);
     const [showOtpModal, setShowOtpModal] = useState(false);
@@ -81,23 +81,36 @@ export default function SignInScreen() {
     }, []);
 
     const onSubmit = async (data: LoginFormData) => {
+                                // router.push("/truck/TruckMap")
+
         setLoading(true);
         try {
             const response = await loginUser(data);
-            if (response?.status) {                
+            if (response?.status) {
                 if (response?.verified === true) {
                     Toast.show({
-                        type: t("success"),
+                        type: "success",
                         text1: t("Login Successful"),
 
                     });
+                    console.log("response",response);
+                    
 
                     if (Platform.OS === 'web') {
-                        localStorage.setItem("auth_token", response.token)
+                        localStorage.setItem("auth_token", response.token);
+                        localStorage.setItem("user_type", response.user_type);
+
                     } else {
                         await AsyncStorage.setItem('auth_token', response.token);
+                        await AsyncStorage.setItem('user_type', response.user_type);
+
                     }
-                    router.push("/");
+
+                    if (response?.user_type === "truck") {
+                        router.push("/truck/TruckMap")
+                    } else {
+                        router.push("/company/CompanyMap")
+                    }
                 } else {
 
                     setShowOtpModal(true);
@@ -117,7 +130,7 @@ export default function SignInScreen() {
             }
         } catch (err: any) {
             Toast.show({
-                type: t("error"),
+                 type: "error",
                 text1: t("Failed"),
                 text2: err.message ?? t("Something went wrong!"),
             });
@@ -145,7 +158,7 @@ export default function SignInScreen() {
 
             if (response?.status) {
                 Toast.show({
-                    type: t("success"),
+                        type: "success",
                     text1: response?.message ?? t("Otp Verified"),
                     text2: t("Registered successfully"),
 
@@ -156,7 +169,7 @@ export default function SignInScreen() {
             }
         } catch (err: any) {
             Toast.show({
-                type: t("error"),
+                 type: "error",
                 text1: t("Failed"),
                 text2: err?.message ?? t("Something went wrong!"),
 
@@ -166,7 +179,7 @@ export default function SignInScreen() {
     }
 
 
-    const resendOtp = async() => { 
+    const resendOtp = async () => {
         const data = {
             ...(truckId ? { truck_id: truckId } : { company_id: companyId })
         };
@@ -176,15 +189,15 @@ export default function SignInScreen() {
 
             if (response?.status) {
                 Toast.show({
-                    type: t("success"),
-                    text1: response?.message ??  t("Otp resend successfull "),
+                        type: "success",
+                    text1: response?.message ?? t("Otp resend successfull "),
 
                 });
 
             }
         } catch (err: any) {
             Toast.show({
-                type: t("error"),
+                 type: "error",
                 text1: t("Failed"),
                 text2: err?.message ?? t("Something went wrong!"),
 
@@ -198,11 +211,11 @@ export default function SignInScreen() {
             {/* ✅ Animated Header */}
             <Animated.View style={[styles.header, { height: headerHeight }]}>
                 <Image
-                          source={require("../../../assets/images/truckLogo.png")}
-                
-                          style={{ width: 140, height: 90 }}
-                        />
-                <Text style={styles.headerTitle}>LOAD KRO</Text>
+                    source={require("../../../assets/images/truckLogo.png")}
+
+                    style={{ width: 140, height: 90 }}
+                />
+                <Text style={styles.headerTitle}>LOADKRO</Text>
                 <Text style={styles.headerSubtitle}>{t("Connecting Trucks with Companies")}</Text>
             </Animated.View>
 
@@ -296,10 +309,11 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     headerTitle: {
-        fontSize: 28,
+        fontSize: 20,
         fontWeight: 'bold',
         color: 'white',
         marginBottom: 8,
+        marginLeft: 6,
         fontFamily: "Inter_700Bold",
     },
     headerSubtitle: {
